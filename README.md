@@ -171,7 +171,6 @@ This workflow connects the trained model to a user-friendly web interface.
 ---
 
 📂 Project Structure
-
 Student-Performance-Predictor/
 │
 ├── app.py                         # Flask application
