@@ -93,7 +93,7 @@ These metrics describe the model's performance on the evaluated data. Actual per
 
 ![Student Performance Predictor Prediction Results](screenshots/prediction-results.png)
 
-> **Note:** Place the actual screenshots inside the `screenshots` folder using the exact filenames shown above. GitHub will display the images only when the files exist at those paths.
+
 
 ## 📂 Project Structure
 
