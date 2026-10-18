@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Performance Predictor</title>
+
+    <meta name="description"
+          content="Predict academic performance and receive personalized study recommendations.">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-container">
+            <a href="/" class="brand">EduPredict</a>
+            <span class="header-label">Student Analytics</span>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="page-intro">
+            <p class="eyebrow">ACADEMIC PERFORMANCE ANALYSIS</p>
+
+            <h1>Understand your performance.<br>
+                <span>Plan your progress.</span>
+            </h1>
+
+            <p class="intro-description">
+                Estimate your expected examination score and receive
+                personalized recommendations based on your study habits,
+                attendance, and previous academic performance.
+            </p>
+        </section>
+
+        <div class="dashboard">
+
+            <!-- Input Section -->
+            <section class="panel input-panel">
+
+                <div class="section-heading">
+                    <h2>Academic details</h2>
+                    <p>Enter your information to generate your report.</p>
+                </div>
+
+                <form action="/predict" method="POST">
+
+                    <div class="form-group">
+                        <label for="hours">Daily study hours</label>
+
+                        <input
+                            type="number"
+                            id="hours"
+                            name="hours"
+                            min="0"
+                            max="20"
+                            step="any"
+                            placeholder="e.g. 4.5"
+                            value="{{ request.form.get('hours', '') }}"
+                            required
+                        >
+
+                        <small>Accepted range: 0–20 hours</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attendance">Attendance (%)</label>
+
+                        <input
+                            type="number"
+                            id="attendance"
+                            name="attendance"
+                            min="0"
+                            max="100"
+                            step="any"
+                            placeholder="e.g. 85"
+                            value="{{ request.form.get('attendance', '') }}"
+                            required
+                        >
+
+                        <small>Accepted range: 0–100%</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="previous_scores">Previous examination score</label>
+
+                        <input
+                            type="number"
+                            id="previous_scores"
+                            name="previous_scores"
+                            min="0"
+                            max="100"
+                            step="any"
+                            placeholder="e.g. 78"
+                            value="{{ request.form.get('previous_scores', '') }}"
+                            required
+                        >
+
+                        <small>Accepted range: 0–100 marks</small>
+                    </div>
+
+                    <button type="submit" class="primary-button">
+                        Generate Performance Report
+                    </button>
+
+                </form>
+
+                {% if error %}
+                    <div class="error-message" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <p class="privacy-note">
+                    Predictions are generated using your trained
+                    machine learning model.
+                </p>
+
+            </section>
+
+            <!-- Results Section -->
+            <section class="panel report-panel">
+
+                <div class="section-heading">
+                    <h2>Performance report</h2>
+                    <p>Your prediction and recommended next steps.</p>
+                </div>
+
+                {% if prediction is defined and prediction is not none %}
+
+                    <div class="score-summary">
+                        <p class="result-label">Predicted examination score</p>
+
+                        <div class="score-value">
+                            {{ prediction }}
+                            <span>/ 100</span>
+                        </div>
+
+                        <p class="score-caption">
+                            Estimated score based on the information provided.
+                        </p>
+                    </div>
+
+                    {% if strengths %}
+                        <div class="report-section">
+                            <h3>Areas of strength</h3>
+
+                            {% for strength in strengths %}
+                                <div class="strength-item">
+                                    <span class="status-indicator"></span>
+                                    <p>{{ strength }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if suggestions %}
+                        <div class="report-section">
+                            <h3>Recommended actions</h3>
+
+                            {% for suggestion in suggestions %}
+                                <article class="recommendation">
+                                    <h4>{{ suggestion.title }}</h4>
+                                    <p>{{ suggestion.message }}</p>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if overall_message %}
+                        <div class="action-summary">
+                            <h3>Your next step</h3>
+                            <p>{{ overall_message }}</p>
+                        </div>
+                    {% endif %}
+
+                {% else %}
+
+                    <div class="report-placeholder">
+                        <div class="placeholder-line"></div>
+                        <h3>Your report will appear here</h3>
+
+                        <p>
+                            Submit your academic details to view your
+                            estimated score, identify your strengths,
+                            and receive recommendations for improvement.
+                        </p>
+
+                        <div class="report-features">
+                            <div>
+                                <strong>01</strong>
+                                <span>Score prediction</span>
+                            </div>
+
+                            <div>
+                                <strong>02</strong>
+                                <span>Strength analysis</span>
+                            </div>
+
+                            <div>
+                                <strong>03</strong>
+                                <span>Personalized guidance</span>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        </div>
+
+        <section class="disclaimer">
+            <p>
+                <strong>Note:</strong> Predictions are estimates, not
+                guarantees of actual examination results. Recommendations
+                provide general guidance based on the entered information.
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <span>EduPredict</span>
+            <span>Student Performance Prediction System</span>
+        </div>
+    </footer>
+
+</body>
+</html>
